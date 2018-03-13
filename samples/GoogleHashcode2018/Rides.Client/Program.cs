@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using DMCTS.GrainInterfaces;
+using DMCTS.Grains;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Runtime;
@@ -51,7 +52,9 @@ namespace Rides.Client
                         .ConfigureCluster(options => options.ClusterId = "google-hashcode-2018")
                         .UseStaticClustering(options => options.Gateways.Add((new IPEndPoint(siloAddress, gatewayPort)).ToGatewayUri()))
                         .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ITreeGrain<>).Assembly).WithReferences())
+                        .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(NodeView<>).Assembly).WithReferences())
                         .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(MakeRideAction).Assembly).WithReferences())
+                        .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(Program).Assembly).WithReferences())
                         .ConfigureLogging(logging => logging.AddConsole())
                         .Build();
 
